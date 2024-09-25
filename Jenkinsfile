@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:16'  // Use a Docker image with Node.js installed
-        }
-    }
+    agent any
     environment {
         SNYK_TOKEN = credentials('snyk-api-token')
     }
