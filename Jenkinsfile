@@ -1,5 +1,9 @@
 pipeline {
-    agent any  
+    agent {
+        docker {
+            image 'node:16'  // Use a Docker image with Node.js installed
+        }
+    }
     environment {
         SNYK_TOKEN = credentials('snyk-api-token')
     }
@@ -12,7 +16,7 @@ pipeline {
         stage('Getting Snyk ready') {
             steps {
                 sh 'npm install -g snyk'
-                sh "snyk auth $SNYK_TOKEN"  
+                sh "snyk auth $SNYK_TOKEN"
                 sh 'snyk test'
             }
         }
