@@ -19,6 +19,7 @@ pipeline {
         stage('Installing dependencies') {
             steps {
                 sh 'npm install --save'
+                sh 'npm audit fix'
             }
         }
 
