@@ -33,7 +33,7 @@ pipeline {
 
         stage('Build the image') {
             steps {
-                sh 'npm run build'
+                sh 'npm start' 
             }
         }
     }
