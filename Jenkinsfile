@@ -1,34 +1,20 @@
 pipeline {
-    agent {
-        // Use a Docker image with Node.js and npm pre-installed
-        docker {
-            image 'node:16-alpine'  // You can adjust the Node.js version as needed
-            args '-u root'  // Run as root to avoid permission issues
-        }
-    }
+    agent any
 
     environment {
-        SNYK_TOKEN = credentials('snyk-api-token')  // Ensure SNYK token is stored in Jenkins credentials
+        SNYK_TOKEN = credentials('snyk-api-token')
     }
 
     stages {
         stage('Checkout SCM') {
             steps {
-                // Git checkout with proper credentials if the repo is private
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/MalikWahab1999/aws-elastic-beanstalk-express-js-sample.git',
-                        credentialsId: 'your-github-credentials-id'  // Use GitHub credentials
-                    ]]
-                ])
+                checkout scm
             }
         }
 
         stage('Installing dependencies') {
             steps {
-                // Install npm dependencies
+                // Install npm dependencies without Docker
                 sh 'npm install --save'
             }
         }
@@ -44,22 +30,14 @@ pipeline {
 
         stage('Build the image') {
             steps {
-                // Build your application (replace with your build command)
+                // Build your application
                 sh 'npm run build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Run tests (replace with your test command)
-                sh 'npm test'
             }
         }
     }
 
     post {
         always {
-            // Archive artifacts, like the build output
             archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
         }
 
