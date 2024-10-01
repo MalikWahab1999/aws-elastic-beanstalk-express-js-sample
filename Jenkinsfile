@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'Node16'  // The name of the Node.js installation you configured
+    }
+
     environment {
         SNYK_TOKEN = credentials('snyk-api-token')
     }
@@ -14,14 +18,12 @@ pipeline {
 
         stage('Installing dependencies') {
             steps {
-                // Install npm dependencies without Docker
                 sh 'npm install --save'
             }
         }
 
         stage('Getting Snyk ready') {
             steps {
-                // Install and configure Snyk for security checks
                 sh 'npm install -g snyk'
                 sh "snyk auth $SNYK_TOKEN"
                 sh 'snyk test'
@@ -30,7 +32,6 @@ pipeline {
 
         stage('Build the image') {
             steps {
-                // Build your application
                 sh 'npm run build'
             }
         }
@@ -40,11 +41,9 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
         }
-
         success {
             echo 'Build succeeded'
         }
-
         failure {
             echo 'Build failed'
         }
