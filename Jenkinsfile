@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'Node16'  // The name of the Node.js installation you configured
+        nodejs 'Node16'  // The name of the Node.js 
     }
 
     environment {
-        SNYK_TOKEN = credentials('snyk-api-token')
+        SNYK_TOKEN = credentials('snyk-api-token')  //token variable which holds the secret key
     }
 
     stages {
@@ -19,7 +19,7 @@ pipeline {
         stage('Installing dependencies') {
             steps {
                 sh 'npm install --save'
-                sh 'npm audit fix'
+                sh 'npm audit fix' //fix any of the update problems in packages
             }
         }
 
